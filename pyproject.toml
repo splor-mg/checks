@@ -3,23 +3,21 @@ name = "checks"
 version = "0.0.0-9000"
 description = "A package to centralize data checking functionalities related to SEPLAG's SPLOR subsecretariat."
 readme = "README.md"
+dependencies = [
+  'importlib',
+  'typer >= 0.9',
+  'unidecode'
+]
 requires-python = ">=3.7"
-keywords = []
 authors = [
   { name = "Francisco Júnior", email = "fjunior.alves.oliveira@gmail.com" },
-  { name = "Andrey Labanca", email = "moraislabanca@gmail.com"},
+  { name = "Andrey Labanca", email = "moraislabanca@gmail.com" },
 ]
 
 [project.urls]
 Documentation = "https://github.com/splor-mg/checks#readme"
 Issues = "https://github.com/splor-mg/checks-py/issues"
 Source = "https://github.com/splor-mg/checks-py"
-
-dependencies = [
-  'importlib',
-  'typer >= 0.9',
-  'unidecode',
-]
 
 [project.optional-dependencies]
 sql = ["frictionless[sql]"]
