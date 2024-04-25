@@ -4,7 +4,6 @@ version = "0.0.0-9000"
 description = "A package to centralize data checking functionalities related to SEPLAG's SPLOR subsecretariat."
 readme = "README.md"
 dependencies = [
-  'importlib',
   'typer >= 0.9',
   'unidecode'
 ]
