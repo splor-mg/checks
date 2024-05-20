@@ -3,7 +3,7 @@ import typer
 import logging
 import importlib.metadata
 
-from .requirements import check_packages
+from .requirements import check_installed_packages
 from typing import Optional
 from typing_extensions import Annotated
 
@@ -30,11 +30,10 @@ def main(
     """
 
 
-@app.command("check-packages")
+@app.command("installed-packages")
 def cli_packages(
     requirements_file: Annotated[str, typer.Argument()] = 'requirements.in',
-    stop_on_missing: Annotated[bool, typer.Option("--stop-missing", help="stop execution if a package is missing.")] = False,
-    stop_on_wrong_version: Annotated[bool, typer.Option("--stop-wrong-package", help="stop execution if a package has the wrong version.")] = False,
+    stop_on_failure: Annotated[bool, typer.Option("--stop-on-failure", help="stop execution if a package has the wrong version or is missing.")] = False,
 
 ):
-    check_packages(requirements_file, stop_on_missing, stop_on_wrong_version)
+    check_installed_packages(requirements_file, stop_on_failure)

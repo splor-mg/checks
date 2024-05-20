@@ -14,10 +14,9 @@ class WrongVersionPackageError(Exception):
     """
 
 
-def check_packages(
+def check_installed_packages(
         requirements: str = 'requirements.txt',
-        stop_on_missing: bool = True,
-        stop_on_wrong_version: bool = True,
+        stop_on_failure: bool = True,
 ):
 
     missing_packages = []
@@ -36,13 +35,13 @@ def check_packages(
 
     if missing_packages:
         logger.warning("Required packages are missing: %s", ', '.join(missing_packages))
-        if stop_on_missing:
+        if stop_on_failure:
             raise MissingPackageError
 
     if wrong_version_packages:
         for package, actual, expected in wrong_version_packages:
             logger.warning("Required package with wrong version: %s (Installed: %s, Expected: %s)", package, actual, expected)
-        if stop_on_wrong_version:
+        if stop_on_failure:
             raise WrongVersionPackageError
 
 
@@ -97,5 +96,5 @@ def parse_requirement(req):
 
 
 if __name__ == '__main__':
-    check_packages()
+    check_installed_packages()
 
