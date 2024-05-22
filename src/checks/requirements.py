@@ -14,10 +14,9 @@ class WrongVersionPackageError(Exception):
     """
 
 
-def check_packages(
+def check_installed_packages(
         requirements: str = 'requirements.txt',
-        stop_on_missing: bool = True,
-        stop_on_wrong_version: bool = True,
+        stop_on_failure: bool = True,
 ):
 
     missing_packages = []
@@ -36,13 +35,13 @@ def check_packages(
 
     if missing_packages:
         logger.warning("Required packages are missing: %s", ', '.join(missing_packages))
-        if stop_on_missing:
+        if stop_on_failure:
             raise MissingPackageError
 
     if wrong_version_packages:
         for package, actual, expected in wrong_version_packages:
             logger.warning("Required package with wrong version: %s (Installed: %s, Expected: %s)", package, actual, expected)
-        if stop_on_wrong_version:
+        if stop_on_failure:
             raise WrongVersionPackageError
 
 
@@ -52,20 +51,30 @@ def read_requirements_txt(file_path):
     with open(file_path, 'r') as file:
         lines = file.read().splitlines()
         # remove comments of requirements.txt
-        #lines = [line.strip() for line in lines if not line.startswith('#') and not line.startswith('    #') ]
         lines = [line.strip() for line in lines if
                  line.strip() and not line.startswith('#') and not line.startswith('    #')]
         for line in lines:
+
             packages_to_check.update(parse_requirement(line))
 
     return packages_to_check
 
 
 def parse_requirement(req):
+
+    req = req.replace(' ', '')  # requirements allow spaces, best to avoid.
+
     if not req.strip().startswith('#'):
         if '[' in req:
-            extras_parts = req.split('[')
-            req = str(extras_parts[0]) + '==' + str(extras_parts[1].split('==')[1])
+            parts = list(map(lambda x: x.replace(']', ''), req.split('[')))
+            extras_parts = parts[1].split('==')
+            if len(extras_parts) == 2:
+                package_name, package_version = parts[0], extras_parts[1]
+                return {package_name: package_version}
+
+            elif len(extras_parts) == 1:
+                return {parts[0]: None}
+
 
         if req.startswith('git+https://github.com/') or '@' in req:
             req = req.split(' ')[-1]
@@ -73,7 +82,7 @@ def parse_requirement(req):
             if len(parts) == 2:
                 package_name = parts[0].split('/')[-1]
                 package_version = parts[1].replace('v', '') if parts[1].startswith('v') else None
-                return {package_name: package_version}
+                return {package_name : package_version}
 
         else:
             parts = req.split('==')
@@ -87,5 +96,5 @@ def parse_requirement(req):
 
 
 if __name__ == '__main__':
-    check_packages()
+    check_installed_packages()
 
