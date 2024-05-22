@@ -33,7 +33,7 @@ def main(
 @app.command("installed-packages")
 def cli_packages(
     requirements_file: Annotated[str, typer.Argument()] = 'requirements.in',
-    stop_on_failure: Annotated[bool, typer.Option("--stop-on-failure", help="stop execution if a package has the wrong version or is missing.")] = False,
+    stop_on_failure: Annotated[bool, typer.Option("--stop-on-failure", help="stop execution if a package has the wrong version or is missing.")] = True,
 
 ):
     check_installed_packages(requirements_file, stop_on_failure)
