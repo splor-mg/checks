@@ -33,4 +33,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-check = "checks.cli:app"
+checks = "checks.cli:app"

@@ -15,7 +15,7 @@ class WrongVersionPackageError(Exception):
 
 
 def check_installed_packages(
-        requirements: str = 'requirements.txt',
+        requirements: str = 'requirements.in',
         stop_on_failure: bool = True,
 ):
 
